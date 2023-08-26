@@ -1,6 +1,6 @@
 #include "monty.h"
 #include <string.h>
-#define GNU_SOURCE
+#include <stdio.h>
 
 void free_tokens(void);
 unsigned int token_arr_len(void);
