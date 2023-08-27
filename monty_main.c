@@ -3,6 +3,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+void prototype(void);
+type global_variable;
 char **op_toks = NULL;
 
 /**

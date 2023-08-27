@@ -72,4 +72,8 @@ int pint_error(unsigned int line_number);
 int short_stack_error(unsigned int line_number, char *op);
 int div_error(unsigned int line_number);
 int pchar_error(unsigned int line_number, char *message);
+int main(int argc, char *argv[]);
+stack_t *create_node(int n);
+void free_nodes(void);
+void add_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln);
 #endif
