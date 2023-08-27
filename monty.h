@@ -1,79 +1,139 @@
-#ifndef __MONTY_H__
-#define __MONTY_H__
+#ifndef MONTY_H
+#define MONTY_H
+
+#define _GNU_SOURCE
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
-#define STACK 0
-#define QUEUE 1
-#define DELIMS " \n\t\a\b"
-extern char **op_toks;
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <stdarg.h>
+
 /**
- * struct stack_s - doubly linked list representation of a stack or a queue
- * @n: integer
- * @prev: points to the previous element of the stack or queue
- * @next: points to the next element of the stack or queue
+ * struct stack_s - Doubly linked list representation of a stack (or queue).
  *
- * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO Holberton project
+ * @n: Integer value stored in the node.
+ * @prev: Pointer to the previous element of the stack (or queue).
+ * @next: Pointer to the next element of the stack (or queue).
+ *
+ * Description: This structure defines a node in a doubly linked list,
+ *              commonly used to implement stacks (LIFO) or queues (FIFO).
  */
+
 typedef struct stack_s
 {
-int n;
-struct stack_s *prev;
-struct stack_s *next;
+        int n;
+        struct stack_s *prev;
+        struct stack_s *next;
 } stack_t;
 
 /**
- * struct instruction_s - opcode and its function
- * @opcode: the opcode
- * @f: function to handle the opcode
+ * struct instruction_s - Opcode and its associated function.
  *
- * Description: opcode and its function
- * for stack, queues, LIFO, FIFO Holberton project
+ * @opcode: The opcode.
+ * @f: The function that handles the opcode.
+ *
+ * Description: This structure represents an opcode along with the
+ *              function that should be called to perform the associated operation.
+ *              It is commonly used for implementing stack, queues, LIFO, and FIFO
+ *              operations.
  */
+
 typedef struct instruction_s
 {
-char *opcode;
-void (*f)(stack_t **stack, unsigned int line_number);
+        char *opcode;
+        void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
-void free_stack(stack_t **stack);
-int init_stack(stack_t **stack);
-int check_mode(stack_t *stack);
-void free_tokens(void);
-unsigned int token_arr_len(void);
-int run_monty(FILE *script_fd);
-void set_op_tok_error(int error_code);
-void monty_push(stack_t **stack, unsigned int line_number);
-void monty_pall(stack_t **stack, unsigned int line_number);
-void monty_pint(stack_t **stack, unsigned int line_number);
-void monty_pop(stack_t **stack, unsigned int line_number);
-void monty_swap(stack_t **stack, unsigned int line_number);
-void monty_add(stack_t **stack, unsigned int line_number);
-void monty_nop(stack_t **stack, unsigned int line_number);
-void monty_sub(stack_t **stack, unsigned int line_number);
-void monty_div(stack_t **stack, unsigned int line_number);
-void monty_mul(stack_t **stack, unsigned int line_number);
-void monty_mod(stack_t **stack, unsigned int line_number);
-void monty_pchar(stack_t **stack, unsigned int line_number);
-void monty_pstr(stack_t **stack, unsigned int line_number);
-void monty_rotl(stack_t **stack, unsigned int line_number);
-void monty_rotr(stack_t **stack, unsigned int line_number);
-void monty_stack(stack_t **stack, unsigned int line_number);
-void monty_queue(stack_t **stack, unsigned int line_number);
-char **strtow(char *str, char *delims);
-char *get_int(int n);
-int usage_error(void);
-int malloc_error(void);
-int f_open_error(char *filename);
-int unknown_op_error(char *opcode, unsigned int line_number);
-int no_int_error(unsigned int line_number);
-int pop_error(unsigned int line_number);
-int pint_error(unsigned int line_number);
-int short_stack_error(unsigned int line_number, char *op);
-int div_error(unsigned int line_number);
-int pchar_error(unsigned int line_number, char *message);
-int main(int argc, char *argv[]);
+
+extern stack_t *head;
+typedef void (*op_func)(stack_t **, unsigned int);
+
+/*
+ * File Operations
+ *
+ * This section of the code encompasses functions and
+ * logic for performing
+ * operations related to files. It includes tasks such
+ * as opening, reading,
+ * writing, and manipulating files as needed for the
+ * program's functionality.
+ */
+
+void open_file(char *file_name);
+int parse_line(char *buffer, int line_number, int format);
+void read_file(FILE *);
+int len_chars(FILE *);
+void find_func(char *, char *, int, int);
+
+/*
+ * Stack Operations
+ *
+ * This section of the code contains functions and logic
+ * for performing various
+ * operations on a stack data structure. It includes
+ * operations such as push,
+ * pop, peek, and other stack-specific functions for
+ * managing and manipulating
+ * data in a Last-In-First-Out (LIFO) fashion.
+ */
+
 stack_t *create_node(int n);
 void free_nodes(void);
-void add_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln);
+void print_stack(stack_t **, unsigned int);
+void add_to_stack(stack_t **, unsigned int);
+void add_to_queue(stack_t **, unsigned int);
+
+void call_fun(op_func, char *, char *, int, int);
+
+void print_top(stack_t **, unsigned int);
+void pop_top(stack_t **, unsigned int);
+void nop(stack_t **, unsigned int);
+void swap_nodes(stack_t **, unsigned int);
+
+/*
+ * Mathematical Operations with Nodes
+ *
+ * This section of the code contains functions and logic 
+ * for performing various
+ * mathematical operations using data stored in nodes.
+ * It includes operations
+ * such as addition, subtraction, multiplication, or other
+ * mathematical computations
+ * that involve the values stored in linked list nodes.
+ */
+
+void add_nodes(stack_t **, unsigned int);
+void sub_nodes(stack_t **, unsigned int);
+void div_nodes(stack_t **, unsigned int);
+void mul_nodes(stack_t **, unsigned int);
+void mod_nodes(stack_t **, unsigned int);
+
+/*
+ * String Operations
+ *
+ * This section of the code is dedicated to performing various operations
+ * on strings. It includes functions and logic for manipulating, processing,
+ * or analyzing strings as needed for the program's functionality.
+ */
+
+void print_char(stack_t **, unsigned int);
+void print_str(stack_t **, unsigned int);
+void rotl(stack_t **, unsigned int);
+
+/*
+ * Error Handling
+ *
+ * This section of the code is responsible for managing
+ * and handling errors that
+ * may occur during program execution. It includes functions
+ * and logic to
+ * detect, report, and handle various types of errors to ensure robust and
+ * reliable program behavior.
+ */
+
+void err(int error_code, ...);
+void more_err(int error_code, ...);
+void string_err(int error_code, ...);
+void rotr(stack_t **, unsigned int);
+
 #endif
